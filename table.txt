@@ -1,0 +1,178 @@
+<div class="row">
+    <div class="col-sm-12">
+        <div class="user-item-container">
+            <table class="table table-bordered">
+                <caption class="captiontext" style="text-align:center"><span>{{name}}</span>同学，恭喜你成为<span>{{campusName}}</span>的一名学子！</caption>
+                <thead>
+                    <tr>
+                        <th>学生姓名</th>
+                        <th>专业</th>
+                        <th>班级</th>
+                        <th>学号</th>
+                        <th>宿舍</th>
+                        <th>缴费总金额</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let student of students">
+                        <!--后台循环查找往页面添加数据-->
+                        <td>{{student.institutionName}}</td>
+                        <td>{{student.name}}</td>
+                        <td>{{student.className}}</td>
+                        <td>{{student.studentCode}}</td>
+                        <td>{{student.dormitoryCode}}</td>
+                        <td>{{student.paymentMoney}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+.table{  
+    width: 40%;  
+    height: 50%;  
+    text-align:center;  
+    vertical-align:middle;  
+    font-size:17px;  
+    margin-left:15%;  
+    margin-top:5%;  
+}  
+.captiontext{  
+    font-weight: bold;  
+    font-size:22px;  
+    color: black;  
+    height: 80px;  
+}  
+span{  
+    color: red;  
+}  
+th{  
+    text-align: center;  
+}  
+td{  
+    font-size:15px;  
+    height: 60px;  
+}  
+
+
+
+import { Component, OnInit } from '@angular/core';  
+import { FreshmanRegisterSuccessfulService } from './freshman-register-successful.service';  
+import { StudentModel } from '../../../models/student-model';  
+  
+@Component({  
+  selector: 'app-freshman-register-successful',  
+  templateUrl: './freshman-register-successful.component.html',  
+  styleUrls: ['./freshman-register-successful.component.css'],  
+  providers: [FreshmanRegisterSuccessfulService]  
+})  
+export class FreshmanRegisterSuccessfulComponent implements OnInit {  
+  name="小明";  
+  campusName="北京大学";  
+  
+  ngOnInit() {  
+    this.getstudent();  
+  }  
+  
+  constructor(private freshmanRegisterSuccessfulService: FreshmanRegisterSuccessfulService) { }  
+  public students: Array<StudentModel>;  
+  
+  getstudent() {  
+    this.freshmanRegisterSuccessfulService.getstudent().subscribe(  
+      data => {  
+        this.students = data;  
+      },  
+      error => console.error(error)  
+    );  
+  }  
+}  
+
+
+
+import { Injectable } from '@angular/core';  
+import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';  
+import { Observable } from 'rxjs/Rx';  
+import 'rxjs/add/operator/map';  
+import 'rxjs/add/operator/catch';  
+import 'rxjs/add/operator/toPromise';  
+  
+import { StudentModel } from '../../../models/student-model';  
+  
+@Injectable()  
+export class FreshmanRegisterSuccessfulService {  
+  
+    constructor(public http: Http) { }  
+  
+    public resultURL = 'src/mock-data/freshman-register-successful.json';  
+    private headers = new Headers({ 'Content-Type': 'application/json' });  
+  
+    public getstudent(): Observable<StudentModel[]> {  
+        return this.http.get(this.resultURL, this.headers)  
+            .map((res: Response) => res.json());  
+    }  
+}import { Injectable } from '@angular/core';  
+import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';  
+import { Observable } from 'rxjs/Rx';  
+import 'rxjs/add/operator/map';  
+import 'rxjs/add/operator/catch';  
+import 'rxjs/add/operator/toPromise';  
+  
+import { StudentModel } from '../../../models/student-model';  
+  
+@Injectable()  
+export class FreshmanRegisterSuccessfulService {  
+  
+    constructor(public http: Http) { }  
+  
+    public resultURL = 'src/mock-data/freshman-register-successful.json';  
+    private headers = new Headers({ 'Content-Type': 'application/json' });  
+  
+    public getstudent(): Observable<StudentModel[]> {  
+        return this.http.get(this.resultURL, this.headers)  
+            .map((res: Response) => res.json());  
+    }  
+}  
+
+
+
+export class StudentModel {  
+  id: string; // 信息id  
+  studentCode: string; // 学号  
+  name: string; // 姓名  
+  sex: string; // 性别  
+  IdCard: string; // 身份证号  
+  classId: string; // 班级id  
+  className: string;  // 班级名称  
+  nation: string; // 民族  
+  dormitoryId: string; // 宿舍ID  
+  dormitoryCode: string; // 宿舍编号  
+  campusId: string; // 校区id  
+  campusName: string; //  校区名称  
+  insititutionid: string; // 专业id  
+  institutionName: string; // 专业名称  
+  entranceData: Date ; // 入学时间  
+  stringLike: string; // 模糊查询字段  
+  isCheck: number; // 是否报到  
+  paymentNumber: string; // 缴费号  
+  paymentName:string; //缴费项目  
+  paymentMoney:string; // 缴费金额  
+  ColleageEntranceExamScore: number; // 高考分数  
+}  
+
+
+
+[  
+    {  
+        "id":"1",  
+        "name": "小明",  
+        "institutionName": "物理学",  
+        "className":"2班",  
+        "studentCode": "12050142019",  
+        "dormitoryCode":"4号楼4单元501",  
+        "paymentMoney":"6870",  
+        "campusName":"北京大学"  
+    }  
+] 
+
